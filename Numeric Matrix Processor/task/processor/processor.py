@@ -131,12 +131,39 @@ def get_det(row, matrix):
     return total
 
 
+def get_cofactors(row, matrix):
+    cofactors = []
+    for i in range(int(row)):
+        temp_row = []
+        for j in range(int(row)):
+            sub_matrix = copy.deepcopy(matrix)
+            sub_matrix.pop(i)
+            for line in sub_matrix:
+                line.pop(j)
+            temp_row.append(pow(-1, i + j) * get_det(int(row) - 1, sub_matrix))
+        cofactors.append(temp_row)
+    return cofactors
+
+
+def inverse_matrix(row, matrix):
+    det = get_det(row, matrix)
+    if det == 0:
+        print("This matrix doesn't have an inverse")
+        return False
+    cofactors = get_cofactors(row, matrix)
+    inverse = scalar_mult(row, row, actual_transpose(row, row, cofactors), 1 / det)
+    print("The result is:")
+    print_matrix(inverse)
+    return True
+
+
 while True:
     print("1. Add matrices")
     print("2. Multiply matrix by a constant")
     print("3. Multiply matrices")
     print("4. Transpose matrix")
     print("5. Calculate a determinant")
+    print("6. Inverse matrix")
     print("0. Exit")
     choice = int(input("Your choice:"))
 
@@ -185,6 +212,14 @@ while True:
             matrix = take_matrix_input(row)
             det = get_det(row, matrix)
             print("The result is:\n" + str(det))
+        else:
+            print("The operation cannot be performed.")
+    elif choice == 6:
+        row, column = input("Enter matrix size:").split()
+        if row == column:
+            print("Enter matrix:")
+            matrix = take_matrix_input(row)
+            inverse_matrix(row, matrix)
         else:
             print("The operation cannot be performed.")
     elif choice == 0:
