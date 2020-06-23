@@ -49,10 +49,77 @@ def matrix_mult(rA, cA, cB, mA, mB):
                 result[m][n] += float(mA[m][k]) * float(mB[k][n])
     return result
 
+
+def actual_transpose(row, column, matrix):
+    result = []
+    for m in range(int(column)):
+        row_total = []
+        for n in range(int(row)):
+            row_total.append(0)
+        result.append(row_total)
+
+    for m in range(int(row)):
+        for n in range(int(column)):
+            result[n][m] = matrix[m][n]
+
+    return result
+
+
+def side_transpose(row, column, matrix):
+    result = horizontal_transpose(matrix)
+    result = vertical_transpose(result)
+    result = actual_transpose(row, column, result)
+    return result
+
+
+def vertical_transpose(matrix):
+    result = matrix
+
+    for i in range(len(result)):
+        result[i].reverse()
+
+    return result
+
+
+def horizontal_transpose(matrix):
+    result = matrix
+
+    for i in range(len(result) // 2):
+        temp = result[i]
+        result[i] = result[len(result) - i - 1]
+        result[len(result) - i - 1] = temp
+
+    return result
+
+
+def transpose_matrices():
+    print("1. Main diagonal")
+    print("2. Side diagonal")
+    print("3. Vertical line")
+    print("4. Horizontal line")
+    choice = int(input("Your choice:"))
+    row, column = input("Enter matrix size:").split()
+    print("Enter matrix:")
+    matrix = take_matrix_input(row)
+
+    if choice == 1:
+        new = actual_transpose(row, column, matrix)
+    elif choice == 2:
+        new = side_transpose(row, column, matrix)
+    elif choice == 3:
+        new = vertical_transpose(matrix)
+    elif choice == 4:
+        new = horizontal_transpose(matrix)
+
+    print("The result is:")
+    print_matrix(new)
+
+
 while True:
     print("1. Add matrices")
     print("2. Multiply matrix by a constant")
     print("3. Multiply matrices")
+    print("4. Transpose matrix")
     print("0. Exit")
     choice = int(input("Your choice:"))
 
@@ -92,5 +159,7 @@ while True:
             print_matrix(new)
         else:
             print("The operation cannot be performed.")
+    elif choice == 4:
+        transpose_matrices()
     elif choice == 0:
         break
