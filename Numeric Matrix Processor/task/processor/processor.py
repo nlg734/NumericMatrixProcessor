@@ -1,6 +1,6 @@
 # processor.py
 # by Natasha Graham
-
+import copy
 
 def take_matrix_input(row):
     matrix = []
@@ -102,6 +102,8 @@ def transpose_matrices():
     print("Enter matrix:")
     matrix = take_matrix_input(row)
 
+    new = []
+
     if choice == 1:
         new = actual_transpose(row, column, matrix)
     elif choice == 2:
@@ -115,11 +117,26 @@ def transpose_matrices():
     print_matrix(new)
 
 
+def get_det(row, matrix):
+    total = 0
+    if int(row) == 1:
+        return matrix[0][0]
+    if int(row) == 2:
+        return float(matrix[0][0]) * float(matrix[1][1]) - float(matrix[0][1]) * float(matrix[1][0])
+    for i in range(int(row)):
+        sub_matrix = copy.deepcopy(matrix[1:])
+        for line in sub_matrix:
+            line.pop(i)
+        total += pow(-1,i) * float(matrix[0][i]) * get_det(int(row) - 1, sub_matrix)
+    return total
+
+
 while True:
     print("1. Add matrices")
     print("2. Multiply matrix by a constant")
     print("3. Multiply matrices")
     print("4. Transpose matrix")
+    print("5. Calculate a determinant")
     print("0. Exit")
     choice = int(input("Your choice:"))
 
@@ -161,5 +178,14 @@ while True:
             print("The operation cannot be performed.")
     elif choice == 4:
         transpose_matrices()
+    elif choice == 5:
+        row, column = input("Enter matrix size:").split()
+        if row == column:
+            print("Enter matrix:")
+            matrix = take_matrix_input(row)
+            det = get_det(row, matrix)
+            print("The result is:\n" + str(det))
+        else:
+            print("The operation cannot be performed.")
     elif choice == 0:
         break
